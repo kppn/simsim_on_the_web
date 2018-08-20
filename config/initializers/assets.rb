@@ -1,5 +1,7 @@
 # Be sure to restart your server when you modify this file.
 
+ExecJS.runtime.instance_variable_set :@binary, "node"
+
 # Version of your assets, change this if you want to expire all your assets.
 Rails.application.config.assets.version = '1.0'
 
