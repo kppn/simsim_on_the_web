@@ -1,0 +1,9 @@
+p#notice = notice
+
+p
+  strong Name:
+  = @environment.name
+
+=> link_to 'Edit', edit_environment_path(@environment)
+'|
+=< link_to 'Back', environments_path

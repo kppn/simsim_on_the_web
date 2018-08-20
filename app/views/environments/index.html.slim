@@ -1,0 +1,21 @@
+h1 Listing environments
+
+table
+  thead
+    tr
+      th Name
+      th
+      th
+      th
+
+  tbody
+    - @environments.each do |environment|
+      tr
+        td = environment.name
+        td = link_to 'Show', environment
+        td = link_to 'Edit', edit_environment_path(environment)
+        td = link_to 'Destroy', environment, data: { confirm: 'Are you sure?' }, method: :delete
+
+br
+
+= link_to 'New Environment', new_environment_path

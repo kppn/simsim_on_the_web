@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :environments
   resources :users
   resources :peers
   resources :configs
