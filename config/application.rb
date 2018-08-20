@@ -14,5 +14,26 @@ module SimsimOnTheWeb
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
+
+
+    # ======== Application specific ========
+
+    # ---- slim
+    config.generators.template_engine = :slim
+
+    # ---- opal
+
+    # Compiler options
+    config.opal.method_missing      = true
+    config.opal.optimized_operators = true
+    config.opal.arity_check         = false
+    config.opal.const_missing       = true
+    config.opal.dynamic_require_severity = :ignore
+
+    # Enable/disable /opal_specs route
+    config.opal.enable_specs = true
+
+    # The path to opal specs from Rails.root
+    config.opal.spec_location = 'spec-opal'
   end
 end
