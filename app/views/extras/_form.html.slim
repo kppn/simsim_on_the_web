@@ -1,0 +1,18 @@
+= form_for @extra do |f|
+  - if @extra.errors.any?
+    #error_explanation
+      h2 = "#{pluralize(@extra.errors.count, "error")} prohibited this extra from being saved:"
+      ul
+        - @extra.errors.full_messages.each do |message|
+          li = message
+
+  .field
+    = f.label :name
+    = f.text_field :name
+  .field
+    = f.label :content
+    = f.text_field :content
+  .field
+    = f.label :scenario
+    = f.text_field :scenario
+  .actions = f.submit

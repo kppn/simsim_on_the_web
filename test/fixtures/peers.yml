@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  own_ip: MyString
+  own_port: 1
+  dst_ip: MyString
+  dst_port: 1
+  protocol: MyString
+
+two:
+  name: MyString
+  own_ip: MyString
+  own_port: 1
+  dst_ip: MyString
+  dst_port: 1
+  protocol: MyString

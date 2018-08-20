@@ -1,0 +1,27 @@
+= form_for @peer do |f|
+  - if @peer.errors.any?
+    #error_explanation
+      h2 = "#{pluralize(@peer.errors.count, "error")} prohibited this peer from being saved:"
+      ul
+        - @peer.errors.full_messages.each do |message|
+          li = message
+
+  .field
+    = f.label :name
+    = f.text_field :name
+  .field
+    = f.label :own_ip
+    = f.text_field :own_ip
+  .field
+    = f.label :own_port
+    = f.number_field :own_port
+  .field
+    = f.label :dst_ip
+    = f.text_field :dst_ip
+  .field
+    = f.label :dst_port
+    = f.number_field :dst_port
+  .field
+    = f.label :protocol
+    = f.text_field :protocol
+  .actions = f.submit

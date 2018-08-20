@@ -1,0 +1,12 @@
+p#notice = notice
+
+p
+  strong Name:
+  = @scenario.name
+p
+  strong Content:
+  = @scenario.content
+
+=> link_to 'Edit', edit_scenario_path(@scenario)
+'|
+=< link_to 'Back', scenarios_path

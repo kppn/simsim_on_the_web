@@ -1,0 +1,12 @@
+p#notice = notice
+
+p
+  strong Name:
+  = @config.name
+p
+  strong Log title:
+  = @config.log_title
+
+=> link_to 'Edit', edit_config_path(@config)
+'|
+=< link_to 'Back', configs_path

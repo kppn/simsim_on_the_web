@@ -1,0 +1,31 @@
+h1 Listing peers
+
+table
+  thead
+    tr
+      th Name
+      th Own ip
+      th Own port
+      th Dst ip
+      th Dst port
+      th Protocol
+      th
+      th
+      th
+
+  tbody
+    - @peers.each do |peer|
+      tr
+        td = peer.name
+        td = peer.own_ip
+        td = peer.own_port
+        td = peer.dst_ip
+        td = peer.dst_port
+        td = peer.protocol
+        td = link_to 'Show', peer
+        td = link_to 'Edit', edit_peer_path(peer)
+        td = link_to 'Destroy', peer, data: { confirm: 'Are you sure?' }, method: :delete
+
+br
+
+= link_to 'New Peer', new_peer_path

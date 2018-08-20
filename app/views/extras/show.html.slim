@@ -1,0 +1,15 @@
+p#notice = notice
+
+p
+  strong Name:
+  = @extra.name
+p
+  strong Content:
+  = @extra.content
+p
+  strong Scenario:
+  = @extra.scenario
+
+=> link_to 'Edit', edit_extra_path(@extra)
+'|
+=< link_to 'Back', extras_path

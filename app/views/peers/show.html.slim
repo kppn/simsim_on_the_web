@@ -1,0 +1,24 @@
+p#notice = notice
+
+p
+  strong Name:
+  = @peer.name
+p
+  strong Own ip:
+  = @peer.own_ip
+p
+  strong Own port:
+  = @peer.own_port
+p
+  strong Dst ip:
+  = @peer.dst_ip
+p
+  strong Dst port:
+  = @peer.dst_port
+p
+  strong Protocol:
+  = @peer.protocol
+
+=> link_to 'Edit', edit_peer_path(@peer)
+'|
+=< link_to 'Back', peers_path

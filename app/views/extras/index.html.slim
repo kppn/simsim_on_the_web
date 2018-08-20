@@ -1,0 +1,25 @@
+h1 Listing extras
+
+table
+  thead
+    tr
+      th Name
+      th Content
+      th Scenario
+      th
+      th
+      th
+
+  tbody
+    - @extras.each do |extra|
+      tr
+        td = extra.name
+        td = extra.content
+        td = extra.scenario
+        td = link_to 'Show', extra
+        td = link_to 'Edit', edit_extra_path(extra)
+        td = link_to 'Destroy', extra, data: { confirm: 'Are you sure?' }, method: :delete
+
+br
+
+= link_to 'New Extra', new_extra_path
