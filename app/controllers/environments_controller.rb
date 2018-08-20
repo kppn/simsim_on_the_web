@@ -1,5 +1,8 @@
 class EnvironmentsController < ApplicationController
+  before_action :authenticate_user!
+
   before_action :set_environment, only: [:show, :edit, :update, :destroy]
+
 
   # GET /environments
   # GET /environments.json
