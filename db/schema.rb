@@ -10,13 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180820055136) do
+ActiveRecord::Schema.define(version: 20180827015824) do
 
   create_table "configs", force: :cascade do |t|
     t.string "name"
     t.string "log_title"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "user_id"
+    t.index ["user_id"], name: "index_configs_on_user_id"
   end
 
   create_table "environments", force: :cascade do |t|
@@ -25,8 +27,10 @@ ActiveRecord::Schema.define(version: 20180820055136) do
     t.integer "config_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "user_id"
     t.index ["config_id"], name: "index_environments_on_config_id"
     t.index ["scenario_id"], name: "index_environments_on_scenario_id"
+    t.index ["user_id"], name: "index_environments_on_user_id"
   end
 
   create_table "extras", force: :cascade do |t|
@@ -56,6 +60,8 @@ ActiveRecord::Schema.define(version: 20180820055136) do
     t.string "content"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "user_id"
+    t.index ["user_id"], name: "index_scenarios_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
