@@ -1,15 +1,21 @@
 class ScenariosController < ApplicationController
   before_action :set_scenario, only: [:show, :edit, :update, :destroy]
+  skip_before_action :verify_authenticity_token
 
   # GET /scenarios
   # GET /scenarios.json
   def index
-    @scenarios = Scenario.all
+    @scenarios = Scenario.where(user_id: params['user_id'])
   end
 
   # GET /scenarios/1
   # GET /scenarios/1.json
   def show
+    @scenario = Scenario.find params[:id]
+    respond_to do |format|
+      format.html
+      format.json {render :json => @scenario.to_json(:include => [:extra]) }
+    end
   end
 
   # GET /scenarios/new
@@ -69,6 +75,6 @@ class ScenariosController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def scenario_params
-      params.require(:scenario).permit(:name, :content)
+      params.require(:scenario).permit(:name, :content, :user_id)
     end
 end

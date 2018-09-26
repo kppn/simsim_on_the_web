@@ -54,6 +54,7 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'bootstrap', '~> 4.1.1'
+# gem 'bootstrap-sass'
 gem 'jquery-rails'
 
 gem 'awesome_print'
@@ -68,4 +69,5 @@ gem 'opal-jquery'
 gem 'bootstrap_form'
 gem 'active_decorator'
 
+gem 'websocket-client-simple'
 

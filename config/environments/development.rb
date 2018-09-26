@@ -53,6 +53,10 @@ Rails.application.configure do
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
 
+  config.web_console.whitelisted_ips = '0.0.0.0/0'
+  config.action_cable.disable_request_forgery_protection = true
+
+
   # device
   config.action_mailer.default_url_options = { host: '150.95.134.143', port: 50020}
 end

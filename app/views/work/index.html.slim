@@ -1,0 +1,872 @@
+
+= javascript_include_tag 'codemirror/codemirror'
+= javascript_include_tag 'codemirror/ruby/ruby'
+= stylesheet_link_tag 'codemirror/codemirror'
+
+nav.col-sm-3.col-md-2.hidden-xs-down.bg-faded.sidebar
+    | Configs
+    .row
+        .col-md-12
+            | New Config
+    .row
+        .col-md-8.my
+            input#add_config_name.form-control.form-control-sm type="text" placeholder=""
+        .col-md-4.my
+            button#add_config_btn.btn.btn-primary.btn-block.manu-button.my-0
+                | Add
+
+    ul#ul_config.nav.nav-pills.flex-column
+        li#li_config_template.nav-item.d-none
+            button#btn_config_template.btn.btn-outline-primary.btn-block.manu-button
+                | TEMPLATE
+
+nav.col-sm-3.col-md-2.offset-md-2.hidden-xs-down.bg-faded.sidebar
+    | Scenarios
+    .row
+        .col-md-12
+            | New Config
+    .row
+        .col-md-8.mt-0.mb-0
+            input#add_scenario_name.form-control.form-control-sm type="text" placeholder=""
+        .col-md-4.mt-0.mb-0
+            button#add_scenario_btn.btn.btn-primary.btn-block.manu-button.mt-0
+                | Add
+
+    ul#ul_scenario.nav.nav-pills.flex-column
+        li#li_scenario_template.nav-item.d-none
+            button#btn_scenario_template.btn.btn-outline-primary.btn-block.manu-button
+                | TEMPLATE
+
+main.col-sm-9.offset-sm-3.col-md-8.offset-md-4.pt-3
+    | Edit Scenario
+
+    .row.main-row-box
+        .col-md-12
+            | Environment
+        .col-md-3
+            button.btn.btn-primary.btn-sm
+                | Load Environment
+        .col-md-offset-2.col-md-4
+            input.form-control.form-control-sm type="text" placeholder=""
+        .col-md-3
+            button.btn.btn-primary.btn-sm
+                | Save Environment
+    .row.main-row-box
+        .col-md-2#current_config
+                |
+        .col-md-1#current_config_id.d-none
+                |
+        .col-md-2#current_scenario
+                |
+        .col-md-1#current_scenario_id.d-none
+                |
+        .col-md-2#current_extra.d-none
+                |
+        .col-md-1#current_extra_id.d-none
+                |
+
+    .row.main-row-box
+        .col
+            button#verify_syntax.btn.btn-primary.btn-block
+                | VerifySyntax
+            button#execute.btn.btn-primary.btn-block
+                | Execute
+            button#stop_execute.btn.btn-danger.btn-block.d-none
+                | Stop
+        .col#execute_pid.d-none
+                |
+
+    .row#command_box.main-row-box.d-none
+        .col-md-3
+            .row
+                .col
+                    button#command_control_btn.btn.btn-primary style="border-radius: 0.25em 0 0 0.25em"
+                        | Control
+                    button#command_timer_btn.btn.btn-outline-primary style="border-radius: 0 0.25em 0.25em 0"
+                        | Timer
+        .col-md-3
+            input#command_name.form-control.form-control-sm type="text" placeholder="name"
+        .col-md-3
+            input#command_value.form-control.form-control-sm type="text" placeholder="value(opt)"
+        .col-md-2
+            button#command_send_btn.btn.btn-primary
+                | Send
+        .col#command_event_socket.d-none
+            |
+
+    .row.main-row-box
+        .col.form-group
+            button#save_scenario.btn.btn-primary
+                | Save Scenario
+        .col
+            img#save_loading style='display: none' src='/assets/save_loading.gif'
+    .row.main-row-box
+        .col.d-none
+            textarea#scenario_template_area
+                |state :initial do&#13;&#10;
+                |&nbsp;&nbsp;in_action {&#13;&#10;
+                |&nbsp;&nbsp;}&#13;&#10;
+                |end&#13;&#10;
+                |&#13;&#10;
+                |define do&#13;&#10;
+                |end&#13;&#10;
+        .col.form-group
+            textarea#scenario_area rows="4" cols="3"
+
+    .row.main-row-box
+        .col
+            .mx-auto style='width: 50px'
+                img#wave_allow_down src='assets/wave_allow_down.png'
+
+    .row#extra_config_row_area.main-row-box
+        .col
+            .row
+                .col-md-12
+                    | Extra
+                .col
+                    textarea#extra_area
+            .row
+                .col-md-12
+                    | Config
+                .col-md-12
+                    .row
+                        .col-md-12
+                            input#config_log_title.form-control.form-control-sm type="text" placeholder="Log_title(opt)"
+                    .row#peer_template_box_area
+                        .col-md-12#peer_template_area
+                            .row
+                                .col-md-1
+                                    label
+                                        | Peer
+                                .col-md-3
+                                    input#config_own_ip_port.form-control.form-control-sm type="text" placeholder="Own_IP:Port"
+                                .col-md-3
+                                    input#config_dst_ip_port.form-control.form-control-sm type="text" placeholder="Dst_IP:Port"
+                                .col-md-2
+                                    input#config_protocol.form-control.form-control-sm type="text" placeholder="Protocol"
+                                .col-md-2
+                                    input#config_name.form-control.form-control-sm type="text" placeholder="Name(opt)"
+                                .col-md-1
+                                    button.btn.btn-danger.btn-sm
+                                        | ×
+                                .col#config_id.d-none
+
+                    .row
+                        .col-md-12
+                            .row
+                                .col-md-12
+                                    button#add_peer_input.btn.btn-info.btn-sm
+                                        | ＋
+                                .col-md-12
+                                    button#remove_all_peer_input.btn.btn-info.btn-sm
+                                        | ××
+
+        .col-md-12
+            button#save_config.btn.btn-primary
+                | Save Config
+
+    .row.main-row-box
+        .col-md-12
+            textarea#execute_output_area.execute_output_area.form-control rows="8"
+
+    .row.main-row-box
+        .col-md-12
+            button#test.btn.btn-primary
+
+/----------------------------------------
+/ verification window
+/----------------------------------------
+div#verification_window.verification_window.justify-content-center.d-none
+    div.verification_window_background
+    div.verification_window_foreground
+        div
+            .col
+                .row.my-5
+                    .col-md-12
+                        | Scenario
+                    .col#verification_result_scenario
+
+                .row.my-5
+                    .col-md-12
+                        | Extra
+                    .col#verification_result_extra
+                .row#verification_result_exit_btn_area.my-5.d-none
+                    .col-md-12
+                        button#verification_result_exit_btn.btn.btn-primary
+                            | Exit
+
+
+scss:
+    .manu-button {
+        margin-top: 12px
+    }
+
+    .main-row-box {
+        margin-top: 12px
+    }
+
+    .new-box {
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+
+    .rotate_180 {
+        transform: rotate(180deg);
+    }
+
+    .verification_window {
+        position: fixed;
+        margin-top: -80px;
+        width: 100%;
+        height: 180%;
+        z-index: 9999;
+    }
+
+    .verification_window_background {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: #000000;
+        z-index: 10000;
+        opacity: 0.9;
+    }
+
+    .verification_window_foreground {
+        position: absolute;
+        margin-top: 10%;
+        margin-left: 20%;
+        height: 60%;
+        width: 60%;
+
+        background: #ffffff;
+        border-radius: 20px;
+        z-index: 10001;
+     }
+
+     .verification_result_area {
+        position: relative;
+        width: 80%;
+        height: 80%;
+        padding-top: 20%;
+        padding-left: 20%;
+     }
+
+     .execute_output_area {
+        width: 100%;
+     }
+
+javascript:
+    var scenario_area = CodeMirror.fromTextArea(document.getElementById("scenario_area"), {lineNumbers: true})
+    scenario_area.setSize('100%', '700')
+    var extra_area    = CodeMirror.fromTextArea(document.getElementById("extra_area"), {lineNumbers: true})
+
+opal:
+    require 'opal-jquery'
+    E = Element
+
+    #------------------------------
+    # utility
+    #------------------------------
+    def post_with_csrf(url, payload)
+      csrf_token = Document.find('meta[name="csrf-token"]').attr('content')
+      HTTP.post(url, {'X-CSRF-Token'.to_sym => csrf_token, :payload => payload} ) do |response|
+        response.json['id'] if response.ok?
+      end
+    end
+
+
+    #-----------------------------------------
+    # コンフィグ/シナリオ リスト操作メソッド
+    #-----------------------------------------
+    def switch_list_to_all_inactive(kind)
+      E["#ul_#{kind}"].children.each do |li_elem|
+        btn = li_elem.find('button')
+        btn.remove_class 'btn-primary'
+        btn.add_class 'btn-outline-primary'
+      end
+    end
+
+    def switch_list_to_active(kind, id_num)
+      E["##{kind}_#{id_num}"].tap do |btn|
+        btn.remove_class 'btn-outline-primary'
+        btn.add_class 'btn-primary'
+      end
+    end
+
+    def switch_list_active(kind, id_num)
+      switch_list_to_all_inactive(kind)
+      switch_list_to_active(kind, id_num)
+    end
+
+    def append_list(kind, id, name, action)
+      li_template  = "#li_#{kind}_template"
+      btn_template = "#btn_#{kind}_template"
+      ul           = "#ul_#{kind}"
+
+      li = E[li_template].clone
+      li.remove_class 'd-none'
+      li.id = name
+
+      btn = li.find btn_template
+      btn.id    = "#{kind}_#{id}"
+      btn.html  = name
+
+      E[ul].append li
+
+      btn.on :click, &action
+    end
+
+
+    #===================================================
+    # scenarios
+    #===================================================
+
+    def scenario_get
+      `scenario_area.getValue()`
+    end
+
+    def scenario_set(content)
+      `scenario_area.setValue(content)` if content
+    end
+
+    def extra_get
+      `extra_area.getValue()`
+    end
+
+    def extra_set(content)
+      `extra_area.setValue(content)` if content
+    end
+
+    def set_current(kind, json)
+      if json
+        E["#current_#{kind}_id"].html = json['id'].to_s
+        E["#current_#{kind}"].html    = json['name']
+      else
+        E["#current_#{kind}_id"].html = ''
+        E["#current_#{kind}"].html    = ''
+      end
+    end
+
+    def get_scenario_button_on_click_event_proc
+      Proc.new {|evt|
+        id_num = evt.element.id.sub(/scenario_/, '')
+        HTTP.get("/scenarios/#{id_num}.json", :payload => "user_id=4") do |response|
+          if response.ok?
+            scenario_set response.json['content']
+            switch_list_active('scenario', id_num)
+            set_current('scenario', response.json)
+
+            if response.json['extra']
+              extra_set response.json['extra']['content']
+              set_current('extra', response.json['extra'])
+            else
+              extra_set ''
+              set_current('extra', nil)
+            end
+          end
+        end
+      }
+    end
+
+    def get_all_scenarios
+      HTTP.get('/scenarios.json', :payload => "user_id=4") do |response|
+        if response.ok?
+          response.json.each do |scenario_json|
+            append_list(
+              'scenario',
+              scenario_json['id'], scenario_json['name'],
+              get_scenario_button_on_click_event_proc
+            )
+          end
+        end
+      end
+    end
+
+    def post_new_scenario(name)
+      payload = {
+        scenario: {
+          name: name,
+          content: E['#scenario_template_area'].value,
+          user_id: 4
+        }
+      }
+
+      csrf_token = Document.find('meta[name="csrf-token"]').attr('content')
+
+      HTTP.post('/scenarios.json', {'X-CSRF-Token'.to_sym => csrf_token, :payload => payload} ) do |response|
+        if response.ok?
+          append_list(
+            'scenario',
+            response.json['id'], response.json['name'],
+            get_scenario_button_on_click_event_proc
+          )
+        end
+      end
+    end
+
+    def read_sceanrios(user_id)
+      payload = {
+        scenario: {
+          name: name,
+          content: E['#scenario_template_area'].value,
+          user_id: 4
+        }
+      }
+      HTTP.get('/scenarios', {:payload => payload} ) do |response|
+      end
+      payload = {
+        scenario: {
+          name: name,
+          content: E['#scenario_template_area'].value,
+          user_id: 4
+        }
+      }
+      post_with_csrf '/scenarios.json', payload
+    end
+
+    def save_scenario
+      E['#save_loading'].effect(:fade_in, 300)
+
+      payload = {
+        scenario: {
+          content: scenario_get,
+          user_id: 4
+        }
+      }
+
+      csrf_token = Document.find('meta[name="csrf-token"]').attr('content')
+      id_num = E['#current_scenario_id'].html.to_i
+
+      HTTP.put("/scenarios/#{id_num}.json", {'X-CSRF-Token'.to_sym => csrf_token, :payload => payload} ) do |response|
+        if response.ok?
+          save_extra(id_num)
+        end
+      end
+
+      E['#save_loading'].effect(:fade_out, 300)
+    end
+
+    def content_empty?(content)
+      content.each_line do |line|
+        return false unless line.strip.empty?
+      end
+      true
+    end
+
+    def save_extra(id_num)
+      content = extra_get
+      return if content_empty?(content)
+
+      payload = {
+        extra: {
+          content: extra_get,
+          scenario_id: id_num
+        }
+      }
+      csrf_token = Document.find('meta[name="csrf-token"]').attr('content')
+
+      if extra_id = E['#current_extra_id'].html
+        HTTP.put("/extras/#{extra_id}.json", {'X-CSRF-Token'.to_sym => csrf_token, :payload => payload} ) do |response|
+        end
+      else
+        HTTP.post("/extras.json", {'X-CSRF-Token'.to_sym => csrf_token, :payload => payload} ) do |response|
+        end
+      end
+    end
+
+
+    #===================================================
+    # configs
+    #===================================================
+
+    def config_get
+      log_title = E['#config_log_title'].value.strip
+
+      peers = []
+      E['div[name=peer_box_area]'].each do |area|
+        id               = area.find('#config_id').html
+        own_ip, own_port = area.find('#config_own_ip_port').value.split(':').map{|v| v.strip}
+        dst_ip, dst_port = area.find('#config_dst_ip_port').value.split(':').map{|v| v.strip}
+        protocol         = area.find('#config_protocol').value.strip
+        name             = area.find('#config_name').value.strip
+
+        unless config_inputs_valid?(own_ip, own_port, dst_ip, dst_port, protocol)
+          puts 'invalid config'
+          return nil
+        end
+
+        peers << {
+          id:       id.empty? ? nil : id.to_i,
+          own_ip:   own_ip,
+          own_port: own_port.to_i,
+          dst_ip:   dst_ip,
+          dst_port: dst_port.to_i,
+          protocol: protocol.empty? ? nil : protocol,
+          name:     name.empty? ? nil : name
+        }
+      end
+
+      {
+        config: {
+          id: E['#current_config_id'].html.to_i,
+          name: E['#current_config'].html,
+          log_title: log_title,
+          user_id: 4,
+          peers: peers
+        }
+      }
+    end
+
+    def config_set(json)
+      E['#config_log_title'].value = json['log_title'] if json['log_title']
+      json['peers'].each do |peer|
+        add_peer_input_area(peer['id']).tap do |new_peer_elem|
+          new_peer_elem.find('#config_own_ip_port').value = "#{peer['own_ip']}:#{peer['own_port']}"
+          new_peer_elem.find('#config_dst_ip_port').value = "#{peer['dst_ip']}:#{peer['dst_port']}"
+          new_peer_elem.find('#config_protocol').value    = peer['protocol']
+          new_peer_elem.find('#config_name').value        = peer['name'] if peer['name']
+
+          new_peer_elem.find('#config_id').html           = peer['id']
+        end
+      end
+    end
+
+
+    def get_active_config_btn
+      cur_config_id = E['#current_config_id'].html
+      if cur_config_id.empty?
+        return nil
+      end
+      E["#config_#{cur_config_id}"]
+    end
+
+
+    def get_config_button_on_click_event_proc
+      Proc.new {|evt|
+        id_num = evt.element.id.sub(/config_/, '')
+        HTTP.get("/configs/#{id_num}.json", :payload => "user_id=4") do |response|
+          if response.ok?
+            remove_all_peer_input_area
+            config_set response.json
+            switch_list_active('config', id_num)
+            set_current('config', response.json)
+          end
+        end
+      }
+    end
+
+    def get_all_configs
+      HTTP.get('/configs.json', :payload => "user_id=4") do |response|
+        if response.ok?
+          response.json.each do |config_json|
+            append_list(
+              'config',
+              config_json['id'], config_json['name'],
+              get_config_button_on_click_event_proc
+            )
+          end
+        end
+      end
+    end
+
+    def config_inputs_valid?(own_ip, own_port, dst_ip, dst_port, protocol)
+      [own_ip, dst_ip].each do |ip|
+        unless ip =~ /\A[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\z/
+          puts "invalid ip: #{ip}"
+          return false
+        end
+      end
+      [own_port, dst_port].each do |port|
+        unless port =~ /\A[0-9]+\z/
+          puts "invalid port: #{port}"
+          return false
+        end
+      end
+
+      if protocol.empty?
+        puts "invalid protocol empty"
+        return false
+      end
+      
+      true
+    end
+
+    def save_peer(peer)
+      payload = {'peer' => peer}
+
+      csrf_token = Document.find('meta[name="csrf-token"]').attr('content')
+
+      if peer['id'] 
+        HTTP.put("/peers/#{peer['id']}.json", {'X-CSRF-Token'.to_sym => csrf_token, :payload => payload} ) do |response|
+        end
+      else
+        peer.delete 'id'
+        HTTP.post("/peers.json", {'X-CSRF-Token'.to_sym => csrf_token, :payload => payload} ) do |response|
+        end
+      end
+
+      btn = get_active_config_btn
+      btn.trigger 'click'
+    end
+
+    def save_config_base(config)
+      payload = config
+
+      csrf_token = Document.find('meta[name="csrf-token"]').attr('content')
+      id_num = E['#current_config_id'].html.to_i
+
+      HTTP.put("/configs/#{id_num}.json", {'X-CSRF-Token'.to_sym => csrf_token, :payload => payload} ) do |response|
+      end
+    end
+
+    def save_config
+      payload = config_get
+      config_id_num = E['#current_config_id'].html.to_i
+      id = E['#current_config_id'].html.to_i
+
+      payload['config']['peers'].each do |peer|
+        peer['config_id'] = config_id_num
+        save_peer peer
+      end
+
+      payload['config'].delete 'peers'
+      save_config_base payload
+    end
+
+    def open_extra_config(wave_img_elem)
+      area_elem = E['#extra_config_row_area']
+      if area_elem.css('display') == 'none'
+        wave_img_elem.remove_class('rotate_180')
+      else
+        wave_img_elem.add_class('rotate_180')
+      end
+
+      area_elem.slide_toggle 100
+    end
+
+    def add_peer_input_area(id_num = nil)
+      new_peer_input_elem = E['#peer_template_area'].clone
+      new_peer_input_elem.id = ''
+      new_peer_input_elem.attr 'name', 'peer_box_area'
+      btn = new_peer_input_elem.find 'button'
+
+      btn.on :click do |evt|
+        if id_num
+          csrf_token = Document.find('meta[name="csrf-token"]').attr('content')
+          HTTP.delete("/peers/#{id_num}.json", {'X-CSRF-Token'.to_sym => csrf_token} ) do |response|
+          end
+        end
+        btn.parent.parent.parent.remove
+      end
+
+      E['#peer_template_box_area'].append new_peer_input_elem
+
+      new_peer_input_elem
+    end
+
+
+    def remove_all_peer_input_area
+      E['div[name=peer_box_area]'].each do |area|
+        area.remove
+      end
+    end
+
+    #===================================================
+    # verification
+    #===================================================
+    def verify_syntax
+      HTTP.post("/verifier.json", :payload => {content: scenario_get} ) do |scenario_response|
+        if scenario_response.ok?
+          HTTP.post("/verifier.json", :payload => {content: extra_get}) do |extra_response|
+            if extra_response.ok?
+              scenario_ok = scenario_response.json['stat'] == 0
+              extra_ok    = extra_response.json['stat'] == 0
+
+              E['#verification_result_scenario'].html =
+                scenario_response.json[ scenario_ok ? 'out' : 'err']
+              E['#verification_result_extra'].html =
+                extra_response.json[ extra_ok ? 'out' : 'err' ]
+
+              E['#verification_window'].remove_class 'd-none'
+              if scenario_ok && extra_ok
+                `setTimeout(function(){ $('#verification_window').addClass('d-none') }, 1000)`
+                E['#verification_result_exit_btn_area'].add_class 'd-none'
+              else
+                E['#verification_result_exit_btn_area'].remove_class 'd-none'
+              end
+            end
+          end
+        end
+      end
+    end
+
+    #===================================================
+    # execution
+    #===================================================
+    def open_command_box
+      E['#command_box'].remove_class 'd-none'
+    end
+
+    def close_command_box
+      E['#command_box'].add_class 'd-none'
+    end
+
+    def clear_execute_output_area
+      E['#execute_output_area'].html = ''
+    end
+
+    def execute
+      HTTP.get("/execute.json") do |response|
+        client_id = response.json['client_id'].to_i
+        puts "client_id: #{client_id}"
+        `App.simsim_log_provider = start_subscription(client_id)`
+
+        payload = {
+          command: 'start',
+          client_id: client_id,
+          scenario: scenario_get,
+          config: config_get
+        }
+
+        HTTP.post("/execute.json", :payload => payload) do |response|
+          E['#execute_pid'].html = response.json['pid']
+
+          E['#execute'].add_class 'd-none'
+          E['#stop_execute'].remove_class 'd-none'
+
+          open_command_box
+        end
+      end
+    end
+
+    def stop_execute
+      unless E['#execute_pid'].html.empty?
+        payload = {
+          command: 'stop',
+          pid: E['#execute_pid'].html.to_i
+        }
+
+        payload_json = payload.to_json
+        `$.ajax({type: "POST", async: false, url: "/execute.json", dataType: "json", data: payload_json, success: function(){}});`
+
+        E['#execute'].remove_class 'd-none'
+        E['#stop_execute'].add_class 'd-none'
+
+        close_command_box
+      end
+    end
+
+    #===================================================
+    # command
+    #===================================================
+    def send_command
+      payload = {
+        kind: current_command,
+        event_socket: E['#command_event_socket'].html,
+        name: E['#command_name'].val,
+        value: E['#command_value'].value.empty? ? nil : E['#command_value'].value
+      }
+      HTTP.post("/command.json", :payload => payload) do |response|
+      end
+    end
+
+    def switch_command(kind)
+      ['#command_control_btn', '#command_timer_btn'].each do |btn|
+        E[btn].remove_class 'btn-outline-primary'
+        E[btn].remove_class 'btn-primary'
+      end
+
+      case kind
+      when 'control'
+        E['#command_control_btn'].add_class 'btn-primary'
+        E['#command_control_btn'].remove_class 'btn-outline-primary'
+      when 'timer'
+        E['#command_timer_btn'].add_class 'btn-primary'
+        E['#command_timer_btn'].remove_class 'btn-outline-primary'
+      end
+    end
+
+    def current_command
+      if E['#command_control_btn'].has_class? 'btn-primary'
+        return 'control'
+      elsif E['#command_timer_btn'].has_class? 'btn-primary'
+        return 'timer'
+      end
+    end
+
+
+
+
+    Document.ready? do
+      # list scenarios/configs to nav
+      get_all_scenarios
+      get_all_configs
+
+      E['#add_config_btn'].on :click do |evt|
+        append_list('#add_config_name', '#li_config_template', '#btn_config_template', '#ul_config')
+      end
+
+      E['#add_scenario_btn'].on :click do |evt|
+        post_new_scenario E['#add_scenario_name'].value
+      end
+
+      E['#save_scenario'].on :click do |evt|
+        save_scenario
+      end
+
+      E['#save_config'].on :click do |evt|
+        save_config
+      end
+
+      E['#wave_allow_down'].on :click do |evt|
+        open_extra_config evt.element
+      end
+
+      E['#add_peer_input'].on :click do |evt|
+        add_peer_input_area
+      end
+
+      E['#remove_all_peer_input'].on :click do |evt|
+        remove_all_peer_input_area
+      end
+
+      E['#verify_syntax'].on :click do |evt|
+        verify_syntax
+      end
+
+      E['#verification_result_exit_btn'].on :click do |evt|
+        E['#verification_window'].add_class 'd-none'
+      end
+
+      E['#execute'].on :click do |evt|
+        clear_execute_output_area
+        execute
+      end
+
+      E['#command_control_btn'].on :click do |evt|
+        switch_command 'control'
+      end
+
+      E['#command_timer_btn'].on :click do |evt|
+        switch_command 'timer'
+      end
+
+      E['#command_send_btn'].on :click do |evt|
+        send_command
+      end
+
+      E['#stop_execute'].on :click do |evt|
+        stop_execute
+      end
+
+      E['#test'].on :click do |evt|
+        send_command
+      end
+    end
+
+
+    Window.on :unload do
+      stop_execute
+    end
+
+

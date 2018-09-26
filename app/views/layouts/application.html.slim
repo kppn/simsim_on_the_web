@@ -1,0 +1,24 @@
+doctype html
+html
+    head
+        title
+            | SimsimOnTheWeb
+        = csrf_meta_tags
+        = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
+        = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
+    body
+        nav.navbar.navbar-expand-md.navbar-dark.bg-dark.navbar-fixed-top
+            a.navbar-brand href="#"
+                 | SIMSIM on the WEB
+            .navbar-collapse.collapse
+                 ul#navbar-list-menu.nav.navbar-nav.navbar-right
+                      li
+                          | login
+                      li
+                          | logout
+
+        .container-fluid
+            .row
+                = yield
+
+

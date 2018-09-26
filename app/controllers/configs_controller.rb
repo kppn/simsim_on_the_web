@@ -1,15 +1,25 @@
 class ConfigsController < ApplicationController
   before_action :set_config, only: [:show, :edit, :update, :destroy]
+  skip_before_action :verify_authenticity_token
 
   # GET /configs
   # GET /configs.json
   def index
-    @configs = Config.all
+    @configs = Config.where(user_id: params['user_id'])
+    respond_to do |format|
+      format.html
+      format.json { render :json => @configs.to_json(:include => [:peers]) }
+    end
   end
 
   # GET /configs/1
   # GET /configs/1.json
   def show
+    @config = Config.find params['id']
+    respond_to do |format|
+      format.html
+      format.json { render :json => @config.to_json(:include => [:peers]) }
+    end
   end
 
   # GET /configs/new
@@ -40,6 +50,7 @@ class ConfigsController < ApplicationController
   # PATCH/PUT /configs/1
   # PATCH/PUT /configs/1.json
   def update
+    puts params
     respond_to do |format|
       if @config.update(config_params)
         format.html { redirect_to @config, notice: 'Config was successfully updated.' }
@@ -69,6 +80,6 @@ class ConfigsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def config_params
-      params.require(:config).permit(:name, :log_title)
+      params.require(:config).permit(:name, :log_title, :user_id)
     end
 end

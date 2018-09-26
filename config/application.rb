@@ -35,5 +35,7 @@ module SimsimOnTheWeb
 
     # The path to opal specs from Rails.root
     config.opal.spec_location = 'spec-opal'
+
+		config.action_controller.permit_all_parameters = true
   end
 end

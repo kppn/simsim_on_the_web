@@ -1,5 +1,6 @@
 class PeersController < ApplicationController
   before_action :set_peer, only: [:show, :edit, :update, :destroy]
+  skip_before_action :verify_authenticity_token
 
   # GET /peers
   # GET /peers.json
@@ -69,6 +70,6 @@ class PeersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def peer_params
-      params.require(:peer).permit(:name, :own_ip, :own_port, :dst_ip, :dst_port, :protocol)
+      params.require(:peer).permit(:name, :own_ip, :own_port, :dst_ip, :dst_port, :protocol, :config_id)
     end
 end
