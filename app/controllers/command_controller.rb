@@ -15,6 +15,7 @@ class CommandController < ApplicationController
             end
 
     cmd = "/usr/bin/env ruby #{Rails.root}/lib/simsim/cmd #{params['event_socket']} #{params['kind']} #{params['name']} #{value}"
+		`#{cmd}`
     respond_to do |format|
       format.json{ render :json => {} }
     end
