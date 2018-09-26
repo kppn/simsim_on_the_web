@@ -32,13 +32,13 @@ class VerifierController < ApplicationController
 
       Tempfile.open('scenario_', "#{Rails.root}/tmp/scenarios") do |file|
         file.puts content
-  file.flush
+        file.flush
 
-  cmd = "ruby -c #{file.path}"
+        cmd = "ruby -c #{file.path}"
         Open3.popen3(cmd) do |stdin, stdout, stderr, thr|
-    out = stdout.read
-    err = stderr.read
-    stat = thr.value
+          out = stdout.read
+          err = stderr.read
+          stat = thr.value
         end
       end
 

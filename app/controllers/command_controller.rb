@@ -4,11 +4,6 @@ class CommandController < ApplicationController
   # POST /command
   # POST /command.json
   def create
-    puts params['kind']
-    puts params['event_socket']
-    puts params['name']
-    puts params['value']
-
     value = if params['value']
               if params['value'] =~ /\A[0-9]+\z/
                 params['value'].to_i
@@ -20,11 +15,6 @@ class CommandController < ApplicationController
             end
 
     cmd = "/usr/bin/env ruby #{Rails.root}/lib/simsim/cmd #{params['event_socket']} #{params['kind']} #{params['name']} #{value}"
-    puts "========"
-    p cmd
-    puts `#{cmd}`
-    puts "========"
-
     respond_to do |format|
       format.json{ render :json => {} }
     end

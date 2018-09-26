@@ -718,7 +718,7 @@ opal:
     def execute
       HTTP.get("/execute.json") do |response|
         client_id = response.json['client_id'].to_i
-        puts "client_id: #{client_id}"
+        puts "got client_id for websocket: #{client_id}"
         `App.simsim_log_provider = start_subscription(client_id)`
 
         payload = {

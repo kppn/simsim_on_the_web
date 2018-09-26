@@ -50,7 +50,6 @@ class ConfigsController < ApplicationController
   # PATCH/PUT /configs/1
   # PATCH/PUT /configs/1.json
   def update
-    puts params
     respond_to do |format|
       if @config.update(config_params)
         format.html { redirect_to @config, notice: 'Config was successfully updated.' }
