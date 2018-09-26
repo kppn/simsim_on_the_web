@@ -80,17 +80,37 @@ class ExecuteController < ApplicationController
       conf_str += conf['peers'].map{|peer|
         name, own_ip, own_port, dst_ip, dst_port, protocol =
           peer.fetch_values('name', 'own_ip', 'own_port', 'dst_ip', 'dst_port', 'protocol')
-        "peer :#{name}, '#{own_ip}:#{own_port}', '#{dst_ip}:#{dst_port}', #{protocol}"
+        if name
+          "peer :#{name}, '#{own_ip}:#{own_port}', '#{dst_ip}:#{dst_port}', #{protocol}"
+        else
+          "peer '#{own_ip}:#{own_port}', '#{dst_ip}:#{dst_port}', #{protocol}"
+        end
       }.join("\n")
       conf_str += "\n\n"
 
       conf_str
     end
 
+    def append_default_required_protcol(s)
+      appendixes = [
+        "require_relative '#{Rails.root}/lib/default_protocol/lora/protocol'",
+        "require_relative '#{Rails.root}/lib/default_protocol/packet_forwarder/protocol'",
+        "require_relative '#{Rails.root}/lib/default_protocol/raw'"
+      ].join("\n")
+
+      [appendixes, s].join("\n")
+    end
+
     def start_simsim(params)
       params = to_hash(params)
-      config_file   = save_tempfile('config_', config_json_to_string(params['config']))
-      scenario_file = save_tempfile('scenario_', params['scenario'])
+      config_file  = save_tempfile(
+        'config_',
+        append_default_required_protcol(config_json_to_string(params['config']))
+      )
+      scenario_file = save_tempfile(
+        'scenario_',
+        params['scenario']
+      )
 
       spawn("#{Rails.root}/lib/sender.rb #{params['client_id']} #{config_file.path} #{scenario_file.path}")
     end

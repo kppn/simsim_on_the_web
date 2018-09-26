@@ -4,7 +4,6 @@
 = stylesheet_link_tag 'codemirror/codemirror'
 
 nav.col-sm-3.col-md-2.hidden-xs-down.bg-faded.sidebar
-    | Configs
     .row
         .col-md-12
             | New Config
@@ -21,7 +20,6 @@ nav.col-sm-3.col-md-2.hidden-xs-down.bg-faded.sidebar
                 | TEMPLATE
 
 nav.col-sm-3.col-md-2.offset-md-2.hidden-xs-down.bg-faded.sidebar
-    | Scenarios
     .row
         .col-md-12
             | New Config
@@ -38,11 +36,7 @@ nav.col-sm-3.col-md-2.offset-md-2.hidden-xs-down.bg-faded.sidebar
                 | TEMPLATE
 
 main.col-sm-9.offset-sm-3.col-md-8.offset-md-4.pt-3
-    | Edit Scenario
-
     .row.main-row-box
-        .col-md-12
-            | Environment
         .col-md-3
             button.btn.btn-primary.btn-sm
                 | Load Environment
@@ -52,11 +46,11 @@ main.col-sm-9.offset-sm-3.col-md-8.offset-md-4.pt-3
             button.btn.btn-primary.btn-sm
                 | Save Environment
     .row.main-row-box
-        .col-md-2#current_config
+        .col-md-2#current_config.d-none
                 |
         .col-md-1#current_config_id.d-none
                 |
-        .col-md-2#current_scenario
+        .col-md-2#current_scenario.d-none
                 |
         .col-md-1#current_scenario_id.d-none
                 |
@@ -133,7 +127,7 @@ main.col-sm-9.offset-sm-3.col-md-8.offset-md-4.pt-3
                         .col-md-12
                             input#config_log_title.form-control.form-control-sm type="text" placeholder="Log_title(opt)"
                     .row#peer_template_box_area
-                        .col-md-12#peer_template_area
+                        .col-md-12#peer_template_area.d-none
                             .row
                                 .col-md-1
                                     label
@@ -154,12 +148,9 @@ main.col-sm-9.offset-sm-3.col-md-8.offset-md-4.pt-3
                     .row
                         .col-md-12
                             .row
-                                .col-md-12
+                                .col-md-1
                                     button#add_peer_input.btn.btn-info.btn-sm
                                         | ＋
-                                .col-md-12
-                                    button#remove_all_peer_input.btn.btn-info.btn-sm
-                                        | ××
 
         .col-md-12
             button#save_config.btn.btn-primary
@@ -646,6 +637,7 @@ opal:
 
     def add_peer_input_area(id_num = nil)
       new_peer_input_elem = E['#peer_template_area'].clone
+      new_peer_input_elem.remove_class 'd-none'
       new_peer_input_elem.id = ''
       new_peer_input_elem.attr 'name', 'peer_box_area'
       btn = new_peer_input_elem.find 'button'
@@ -803,6 +795,7 @@ opal:
       get_all_configs
 
       E['#add_config_btn'].on :click do |evt|
+        puts "hoge hoge"
         append_list('#add_config_name', '#li_config_template', '#btn_config_template', '#ul_config')
       end
 
@@ -824,10 +817,6 @@ opal:
 
       E['#add_peer_input'].on :click do |evt|
         add_peer_input_area
-      end
-
-      E['#remove_all_peer_input'].on :click do |evt|
-        remove_all_peer_input_area
       end
 
       E['#verify_syntax'].on :click do |evt|

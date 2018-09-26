@@ -22,7 +22,7 @@ def to_ac_message(ch, client_id, message)
       data: JSON.dump({
         message: message,
         action: 'send_log',
-		    client_id: client_id
+        client_id: client_id
       }),
       identifier: JSON.dump({
         channel: ch
@@ -74,12 +74,19 @@ Open3.popen3(cmd) do |stdin, stdout, stderr, thr|
   loop do
     #msg = stdout.gets
     message = stdout.gets
-		unless message
-		  p 'exit with stdout nil'
-			p stderr.gets
-			exit 1
-		end
-    #message = gets.chomp
+    unless message
+      puts 'exit with stdout nil'
+			ws.send(to_ac_message(ch, id, '=================== ERROR ===================='))
+      unless stderr.eof?
+        stderr.readlines.each do |err|
+          ws.send(to_ac_message(ch, id, err.chomp))
+        end
+      end
+      ws.send(to_ac_message(ch, id, "EXIT"))
+			sleep 1
+      exit 1
+    end
+
     if message
       ws.send(to_ac_message(ch, id, message.chomp))
     end

@@ -70,4 +70,5 @@ gem 'bootstrap_form'
 gem 'active_decorator'
 
 gem 'websocket-client-simple'
+gem 'openssl-cmac'
 
