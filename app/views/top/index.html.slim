@@ -20,7 +20,7 @@ css:
 
     - if user_signed_in?
         .col-md-12.text-center.centered-botton
-            = link_to '始める', '/works/new', :class => 'btn btn-primary' 
+            = link_to '始める', '/work', :class => 'btn btn-primary' 
     - else
         .col-md-12.text-center.centered-botton
             = link_to 'ログイン', new_user_session_path, :class => 'btn btn-primary' 

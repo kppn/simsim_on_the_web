@@ -32,7 +32,7 @@ def to_ac_message(ch, id, message)
   )
 end
 
-ws = WebSocket::Client::Simple.connect 'ws://172.16.1.2:50000/cable'
+ws = WebSocket::Client::Simple.connect 'ws://172.16.1.2:50002/cable'
 ch = 'SimsimLogProviderChannel'
 id = 2
 

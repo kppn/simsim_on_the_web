@@ -6,7 +6,7 @@
 nav.col-sm-3.col-md-2.hidden-xs-down.bg-faded.sidebar
     .row
         .col-md-12
-            | New Config
+            | Config
     .row
         .col-md-8.my
             input#add_config_name.form-control.form-control-sm type="text" placeholder=""
@@ -22,7 +22,7 @@ nav.col-sm-3.col-md-2.hidden-xs-down.bg-faded.sidebar
 nav.col-sm-3.col-md-2.offset-md-2.hidden-xs-down.bg-faded.sidebar
     .row
         .col-md-12
-            | New Config
+            | Scenario
     .row
         .col-md-8.mt-0.mb-0
             input#add_scenario_name.form-control.form-control-sm type="text" placeholder=""
@@ -35,7 +35,7 @@ nav.col-sm-3.col-md-2.offset-md-2.hidden-xs-down.bg-faded.sidebar
             button#btn_scenario_template.btn.btn-outline-primary.btn-block.manu-button
                 | TEMPLATE
 
-main.col-sm-9.offset-sm-3.col-md-8.offset-md-4.pt-3
+main.col-sm-9.offset-sm-3.col-md-8.offset-md-4
     .row.main-row-box
         .col-md-3
             button.btn.btn-primary.btn-sm
@@ -188,6 +188,10 @@ div#verification_window.verification_window.justify-content-center.d-none
 
 
 scss:
+    main {
+        padding-top: 4rem
+    }
+
     .manu-button {
         margin-top: 12px
     }
@@ -313,7 +317,8 @@ opal:
     #===================================================
 
     def scenario_get
-      `scenario_area.getValue()`
+      scenario = `scenario_area.getValue()`
+      scenario.empty? ? nil : scenario
     end
 
     def scenario_set(content)
@@ -450,17 +455,18 @@ opal:
 
       payload = {
         extra: {
-          content: extra_get,
+          content: content,
           scenario_id: id_num
         }
       }
       csrf_token = Document.find('meta[name="csrf-token"]').attr('content')
 
-      if extra_id = E['#current_extra_id'].html
-        HTTP.put("/extras/#{extra_id}.json", {'X-CSRF-Token'.to_sym => csrf_token, :payload => payload} ) do |response|
+      extra_id = E['#current_extra_id'].html
+      if extra_id.empty?
+        HTTP.post("/extras.json", {'X-CSRF-Token'.to_sym => csrf_token, :payload => payload} ) do |response|
         end
       else
-        HTTP.post("/extras.json", {'X-CSRF-Token'.to_sym => csrf_token, :payload => payload} ) do |response|
+        HTTP.put("/extras/#{extra_id}.json", {'X-CSRF-Token'.to_sym => csrf_token, :payload => payload} ) do |response|
         end
       end
     end
@@ -496,6 +502,8 @@ opal:
           name:     name.empty? ? nil : name
         }
       end
+
+      return nil if peers.empty?
 
       {
         config: {
@@ -713,11 +721,17 @@ opal:
         puts "got client_id for websocket: #{client_id}"
         `App.simsim_log_provider = start_subscription(client_id)`
 
+        scenario, config, extra = [scenario_get, config_get, extra_get]
+        if scenario.nil? || config.nil?
+          break
+        end
+
         payload = {
           command: 'start',
           client_id: client_id,
-          scenario: scenario_get,
-          config: config_get
+          scenario: scenario,
+          config: config,
+          extra: extra
         }
 
         HTTP.post("/execute.json", :payload => payload) do |response|

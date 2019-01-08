@@ -2,6 +2,8 @@ class ExecuteController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def index
+    start_receiver
+
     respond_to do |format|
       format.json{ render :json => {client_id: Random.rand(10000000)}.to_json }
     end
@@ -37,6 +39,13 @@ class ExecuteController < ApplicationController
   end
 
   private
+    def start_receiver
+      receiver_pid = `ps aux | grep receiver.rb | grep -v grep | awk '{print $2}'`
+      if receiver_pid.nil? || receiver_pid.empty?
+        spawn "#{Rails.root}/lib/receiver.rb"
+      end
+    end
+
     def save_tempfile(prefix, content)
       Tempfile.create([prefix, '.rb']).tap do |fp|
         fp.print content
@@ -91,32 +100,36 @@ class ExecuteController < ApplicationController
       conf_str
     end
 
-    def append_default_required_protcol(s)
-      appendixes = [
+    def default_required_protcols
+      [
         "require_relative '#{Rails.root}/lib/default_protocol/lora/protocol'",
         "require_relative '#{Rails.root}/lib/default_protocol/packet_forwarder/protocol'",
         "require_relative '#{Rails.root}/lib/default_protocol/raw'"
       ].join("\n")
-
-      [appendixes, s].join("\n")
     end
 
     def start_simsim(params)
       params = to_hash(params)
-      config_file  = save_tempfile(
-        'config_',
-        append_default_required_protcol(config_json_to_string(params['config']))
-      )
-      scenario_file = save_tempfile(
-        'scenario_',
-        params['scenario']
-      )
 
-      spawn("#{Rails.root}/lib/sender.rb #{params['client_id']} #{config_file.path} #{scenario_file.path}")
+      full_config = [
+        params['extra'],
+        default_required_protcols,
+        config_json_to_string(params['config'])
+      ].join("\n")
+
+      config_file   = save_tempfile 'config_', full_config
+      scenario_file = save_tempfile 'scenario_', params['scenario']
+
+      spawn "#{Rails.root}/lib/sender.rb #{params['client_id']} #{config_file.path} #{scenario_file.path}"
     end
 
     def stop_simsim(params)
       pid = JSON.parse(params.keys.first)['pid']
+
+      if `pgrep -P #{pid}`.empty?
+        return 0
+      end
+
       child_pid = `pgrep -P #{pid}`
       if child_pid.chomp
         `kill -9 #{child_pid.chomp}`
