@@ -6,19 +6,23 @@ html
         = csrf_meta_tags
         = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
         = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
-    body
+    body style='padding-top: 100px'
+        - if user_signed_in?
+            span#user_id
+                = current_user.id
         nav.navbar.navbar-expand-md.navbar-dark.bg-dark.fixed-top
             a.navbar-brand href="#"
                  | SIMSIM on the WEB
             .navbar-collapse.collapse
-                 ul#navbar-list-menu.nav.navbar-nav.navbar-right
-                      li
-                          | login
-                      li
-                          | logout
+                ul#navbar-list-menu.nav.navbar-nav.navbar-right
+                    - if user_signed_in?
+                        span style="color: #888"
+                            = link_to "logout", destroy_user_session_path, method: :delete
+            p.navbar-text.navbar-right style="padding-bottom: 0"
+                - if user_signed_in?
+                    = current_user.email
 
         .container-fluid
-            .row
-                = yield
-
+            / .row
+            = yield
 

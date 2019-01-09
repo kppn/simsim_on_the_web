@@ -5,7 +5,11 @@ class ScenariosController < ApplicationController
   # GET /scenarios
   # GET /scenarios.json
   def index
-    @scenarios = Scenario.where(user_id: params['user_id'])
+    @scenarios = Scenario.where(user_id: current_user.id)
+    respond_to do |format|
+      format.html {render partial: 'list', collection: @scenarios }
+      format.json { render :json => @scenarios.to_json(:include => [:peers]) }
+    end
   end
 
   # GET /scenarios/1
@@ -31,6 +35,7 @@ class ScenariosController < ApplicationController
   # POST /scenarios.json
   def create
     @scenario = Scenario.new(scenario_params)
+    @scenario.user_id = current_user.id
 
     respond_to do |format|
       if @scenario.save

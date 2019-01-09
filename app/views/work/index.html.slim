@@ -14,7 +14,7 @@ nav.col-sm-3.col-md-2.hidden-xs-down.bg-faded.sidebar
             button#add_config_btn.btn.btn-primary.btn-block.manu-button.my-0
                 | Add
 
-    ul#ul_config.nav.nav-pills.flex-column
+    ul#ul_config.nav.nav-pills.flex-column.ul-list
         li#li_config_template.nav-item.d-none
             button#btn_config_template.btn.btn-outline-primary.btn-block.manu-button
                 | TEMPLATE
@@ -30,7 +30,7 @@ nav.col-sm-3.col-md-2.offset-md-2.hidden-xs-down.bg-faded.sidebar
             button#add_scenario_btn.btn.btn-primary.btn-block.manu-button.mt-0
                 | Add
 
-    ul#ul_scenario.nav.nav-pills.flex-column
+    ul#ul_scenario.nav.nav-pills.flex-column.ul-list
         li#li_scenario_template.nav-item.d-none
             button#btn_scenario_template.btn.btn-outline-primary.btn-block.manu-button
                 | TEMPLATE
@@ -189,7 +189,7 @@ div#verification_window.verification_window.justify-content-center.d-none
 
 scss:
     main {
-        padding-top: 4rem
+        padding-top: 0rem
     }
 
     .manu-button {
@@ -250,6 +250,10 @@ scss:
         width: 100%;
      }
 
+     .ul-list {
+        position: relative;
+     }
+
 javascript:
     var scenario_area = CodeMirror.fromTextArea(document.getElementById("scenario_area"), {lineNumbers: true})
     scenario_area.setSize('100%', '700')
@@ -275,7 +279,7 @@ opal:
     #-----------------------------------------
     def switch_list_to_all_inactive(kind)
       E["#ul_#{kind}"].children.each do |li_elem|
-        btn = li_elem.find('button')
+        btn = li_elem.find('button').first
         btn.remove_class 'btn-primary'
         btn.add_class 'btn-outline-primary'
       end
@@ -365,15 +369,15 @@ opal:
     end
 
     def get_all_scenarios
-      HTTP.get('/scenarios.json', :payload => "user_id=4") do |response|
+      HTTP.get('/scenarios') do |response|
         if response.ok?
-          response.json.each do |scenario_json|
-            append_list(
-              'scenario',
-              scenario_json['id'], scenario_json['name'],
-              get_scenario_button_on_click_event_proc
-            )
-          end
+          E['#ul_scenario'].html = response.body
+
+          E['#ul_scenario'].children.map{|li|
+            li.children('button').first
+          }.each{|btn|
+            btn.on :click, &get_scenario_button_on_click_event_proc
+          }
         end
       end
     end
@@ -391,11 +395,7 @@ opal:
 
       HTTP.post('/scenarios.json', {'X-CSRF-Token'.to_sym => csrf_token, :payload => payload} ) do |response|
         if response.ok?
-          append_list(
-            'scenario',
-            response.json['id'], response.json['name'],
-            get_scenario_button_on_click_event_proc
-          )
+          get_all_scenarios
         end
       end
     end
@@ -554,16 +554,51 @@ opal:
       }
     end
 
-    def get_all_configs
-      HTTP.get('/configs.json', :payload => "user_id=4") do |response|
-        if response.ok?
-          response.json.each do |config_json|
-            append_list(
-              'config',
-              config_json['id'], config_json['name'],
-              get_config_button_on_click_event_proc
-            )
+    def delete_config_button_on_click_event_proc
+      Proc.new {|evt|
+        id_num = evt.element.id.sub(/delete_config_/, '')
+        HTTP.delete("/configs/#{id_num}") do |response|
+          if response.ok?
+            get_all_configs
           end
+        end
+      }
+    end
+
+    def get_all_configs
+      HTTP.get('/configs') do |response|
+        if response.ok?
+          E['#ul_config'].html = response.body
+
+          E['#ul_config'].children.map{|li|
+            li.children('button').to_a
+          }.each{|(get_btn, delete_btn)|
+            get_btn.on :click, &get_config_button_on_click_event_proc
+            delete_btn.on :click, &delete_config_button_on_click_event_proc
+          }
+        end
+      end
+    end
+
+    def post_new_config(name)
+      config_payload = {
+        config: {
+          name: name,
+          log_title: '',
+          peers_attributes: [{
+            name: '',
+            own_ip: '0.0.0.0', own_port: 0,
+            dst_ip: '0.0.0.0', dst_port: 0,
+            protocol: 'String'
+          }]
+        }
+      }
+
+      csrf_token = Document.find('meta[name="csrf-token"]').attr('content')
+
+      HTTP.post('/configs', {'X-CSRF-Token'.to_sym => csrf_token, :payload => config_payload} ) do |config_response|
+        if config_response.ok?
+          get_all_configs
         end
       end
     end
@@ -809,8 +844,7 @@ opal:
       get_all_configs
 
       E['#add_config_btn'].on :click do |evt|
-        puts "hoge hoge"
-        append_list('#add_config_name', '#li_config_template', '#btn_config_template', '#ul_config')
+        post_new_config E['#add_config_name'].value
       end
 
       E['#add_scenario_btn'].on :click do |evt|

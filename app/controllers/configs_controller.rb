@@ -5,9 +5,9 @@ class ConfigsController < ApplicationController
   # GET /configs
   # GET /configs.json
   def index
-    @configs = Config.where(user_id: params['user_id'])
+    @configs = Config.where(user_id: current_user.id)
     respond_to do |format|
-      format.html
+      format.html {render partial: 'list', collection: @configs }
       format.json { render :json => @configs.to_json(:include => [:peers]) }
     end
   end
@@ -35,10 +35,11 @@ class ConfigsController < ApplicationController
   # POST /configs.json
   def create
     @config = Config.new(config_params)
+    @config.user_id = current_user.id
 
     respond_to do |format|
       if @config.save
-        format.html { redirect_to @config, notice: 'Config was successfully created.' }
+        format.html { head :no_content}
         format.json { render :show, status: :created, location: @config }
       else
         format.html { render :new }
@@ -66,7 +67,7 @@ class ConfigsController < ApplicationController
   def destroy
     @config.destroy
     respond_to do |format|
-      format.html { redirect_to configs_url, notice: 'Config was successfully destroyed.' }
+      format.html { head :no_content}
       format.json { head :no_content }
     end
   end
@@ -79,6 +80,17 @@ class ConfigsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def config_params
-      params.require(:config).permit(:name, :log_title, :user_id)
+      params.require(:config).permit(
+        :name,
+        :log_title,
+        peers_attributes: [
+          :name,
+          :own_ip,
+          :own_port,
+          :dst_ip,
+          :dst_port,
+          :protocol
+        ]
+      )
     end
 end
