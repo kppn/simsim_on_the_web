@@ -72,3 +72,5 @@ gem 'active_decorator'
 gem 'websocket-client-simple'
 gem 'openssl-cmac'
 
+gem 'unicorn'
+
