@@ -368,15 +368,29 @@ opal:
       }
     end
 
+
+    def delete_scenario_button_on_click_event_proc
+      Proc.new {|evt|
+        id_num = evt.element.id.sub(/delete_scenario_/, '')
+        HTTP.delete("/scenarios/#{id_num}") do |response|
+          if response.ok?
+            get_all_scenarios
+          end
+        end
+      }
+    end
+
+
     def get_all_scenarios
       HTTP.get('/scenarios') do |response|
         if response.ok?
           E['#ul_scenario'].html = response.body
 
           E['#ul_scenario'].children.map{|li|
-            li.children('button').first
-          }.each{|btn|
-            btn.on :click, &get_scenario_button_on_click_event_proc
+            li.children('button').to_a
+          }.each{|(get_btn, delete_btn)|
+            get_btn.on :click, &get_scenario_button_on_click_event_proc
+            delete_btn.on :click, &delete_scenario_button_on_click_event_proc
           }
         end
       end

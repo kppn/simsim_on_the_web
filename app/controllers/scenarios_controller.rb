@@ -76,7 +76,7 @@ class ScenariosController < ApplicationController
   def destroy
     @scenario.destroy
     respond_to do |format|
-      format.html { redirect_to scenarios_url, notice: 'Scenario was successfully destroyed.' }
+      format.html { head :no_content}
       format.json { head :no_content }
     end
   end
