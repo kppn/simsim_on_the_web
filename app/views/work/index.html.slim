@@ -98,8 +98,8 @@ main.col-sm-9.offset-sm-3.col-md-8.offset-md-4
         .col.d-none
             textarea#scenario_template_area
                 |state :initial do&#13;&#10;
-                |&nbsp;&nbsp;in_action {&#13;&#10;
-                |&nbsp;&nbsp;}&#13;&#10;
+                |  in_action {&#13;&#10;
+                |  }&#13;&#10;
                 |end&#13;&#10;
                 |&#13;&#10;
                 |define do&#13;&#10;
@@ -478,6 +478,7 @@ opal:
 
     def config_get
       log_title = E['#config_log_title'].value.strip
+      log_title = '' if log_title.empty?
 
       peers = []
       E['div[name=peer_box_area]'].each do |area|

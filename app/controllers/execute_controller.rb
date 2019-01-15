@@ -85,7 +85,11 @@ class ExecuteController < ApplicationController
       conf = config['config']
       conf_str = ''
 
-      conf_str += "log '#{conf['log_title']}'\n" unless conf['log_title'].empty?
+      if conf['log_title'].empty?
+        conf_str += "log ''\n"
+      else
+        conf_str += "log '#{conf['log_title']}'\n"
+      end
       conf_str += conf['peers'].map{|peer|
         name, own_ip, own_port, dst_ip, dst_port, protocol =
           peer.fetch_values('name', 'own_ip', 'own_port', 'dst_ip', 'dst_port', 'protocol')

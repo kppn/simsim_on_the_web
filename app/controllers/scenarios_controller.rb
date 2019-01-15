@@ -35,6 +35,15 @@ class ScenariosController < ApplicationController
   # POST /scenarios.json
   def create
     @scenario = Scenario.new(scenario_params)
+    @scenario.content = <<~EOL
+      state :initial do
+        in_action {
+        }
+      end
+
+      define do
+      end
+    EOL
     @scenario.user_id = current_user.id
 
     respond_to do |format|
