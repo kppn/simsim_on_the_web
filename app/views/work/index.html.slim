@@ -350,7 +350,7 @@ opal:
     def get_scenario_button_on_click_event_proc
       Proc.new {|evt|
         id_num = evt.element.id.sub(/scenario_/, '')
-        HTTP.get("/scenarios/#{id_num}.json", :payload => "user_id=4") do |response|
+        HTTP.get("/scenarios/#{id_num}.json", :payload => "") do |response|
           if response.ok?
             scenario_set response.json['content']
             switch_list_active('scenario', id_num)
@@ -400,8 +400,7 @@ opal:
       payload = {
         scenario: {
           name: name,
-          content: E['#scenario_template_area'].value,
-          user_id: 4
+          content: E['#scenario_template_area'].value
         }
       }
 
@@ -418,8 +417,7 @@ opal:
       payload = {
         scenario: {
           name: name,
-          content: E['#scenario_template_area'].value,
-          user_id: 4
+          content: E['#scenario_template_area'].value
         }
       }
       HTTP.get('/scenarios', {:payload => payload} ) do |response|
@@ -427,8 +425,7 @@ opal:
       payload = {
         scenario: {
           name: name,
-          content: E['#scenario_template_area'].value,
-          user_id: 4
+          content: E['#scenario_template_area'].value
         }
       }
       post_with_csrf '/scenarios.json', payload
@@ -439,8 +436,7 @@ opal:
 
       payload = {
         scenario: {
-          content: scenario_get,
-          user_id: 4
+          content: scenario_get
         }
       }
 
@@ -525,7 +521,6 @@ opal:
           id: E['#current_config_id'].html.to_i,
           name: E['#current_config'].html,
           log_title: log_title,
-          user_id: 4,
           peers: peers
         }
       }
@@ -558,7 +553,7 @@ opal:
     def get_config_button_on_click_event_proc
       Proc.new {|evt|
         id_num = evt.element.id.sub(/config_/, '')
-        HTTP.get("/configs/#{id_num}.json", :payload => "user_id=4") do |response|
+        HTTP.get("/configs/#{id_num}.json", :payload => "") do |response|
           if response.ok?
             remove_all_peer_input_area
             config_set response.json

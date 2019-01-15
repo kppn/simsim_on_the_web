@@ -64,7 +64,7 @@ config_file_path   = ARGV[1]
 scenario_file_path = ARGV[2]
 
 
-ws = setup_websocket('172.16.1.2', 50002, ch, id)
+ws = setup_websocket('150.95.134.143', 50031, ch, id)
 
 sleep 1
 

@@ -16,6 +16,7 @@ class ScenariosController < ApplicationController
   # GET /scenarios/1.json
   def show
     @scenario = Scenario.find params[:id]
+    @scenario.user_id = current_user.id
     respond_to do |format|
       format.html
       format.json {render :json => @scenario.to_json(:include => [:extra]) }
